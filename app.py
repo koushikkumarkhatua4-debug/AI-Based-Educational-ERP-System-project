@@ -6,11 +6,24 @@ st.set_page_config(page_title="AI ERP System", page_icon="🎓", layout="wide")
 st.title("🎓 AI-Powered Educational ERP System")
 st.caption("Student, Attendance, Fees, Results and AI Performance Prediction")
 
-DATA="data"
-students=pd.read_csv(os.path.join(DATA,"students.csv"))
-attendance=pd.read_csv(os.path.join(DATA,"attendance.csv"))
-marks=pd.read_csv(os.path.join(DATA,"marks.csv"))
-fees=pd.read_csv(os.path.join(DATA,"fees.csv"))
+def find_file(filename):
+    search_paths = [
+        filename,
+        os.path.join("data", filename),
+        os.path.join("data", "data", filename),
+        os.path.join(os.path.dirname(__file__), filename),
+        os.path.join(os.path.dirname(__file__), "data", filename),
+    ]
+    for path in search_paths:
+        if os.path.exists(path):
+            return path
+    st.error(f"❌ Could not find {filename}. Please check your GitHub repo — it must be in the 'data' folder.")
+    st.stop()
+
+students=pd.read_csv(find_file("students.csv"))
+attendance=pd.read_csv(find_file("attendance.csv"))
+marks=pd.read_csv(find_file("marks.csv"))
+fees=pd.read_csv(find_file("fees.csv"))
 
 c1,c2,c3,c4=st.columns(4)
 c1.metric("Students", len(students))
